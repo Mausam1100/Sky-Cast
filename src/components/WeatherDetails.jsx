@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import bgImage2 from '../assets/sunset-7607500_1920.jpg'
 import clearSky_01d from '../assets/clear_sky-01d.png'
 import clearSky_01n from '../assets/clear_sky-01n.png'
@@ -40,6 +40,8 @@ const WeatherDetails = () => {
     const [weatherInfo, setWeatherInfo] = useState({})
     const [searchValue, setSearchValue] = useState("")
     const apiKey = import.meta.env.VITE_API_KEY;
+
+    const ref = useRef(null)
 
     const fetchdata = async(city) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
@@ -86,7 +88,13 @@ const WeatherDetails = () => {
             else{
                 fetchdata(searchValue)
             }
+            
+            if(ref.current) {
+                ref.current.blur()
+            }
         }
+
+
     }
 
     useEffect(() => {
@@ -149,7 +157,7 @@ const WeatherDetails = () => {
                 </div>
 
                 <div className='flex items-center justify-center pt-3.5'>
-                    <input type="text" value={searchValue} onKeyDown={handleKeyDown} onChange={(e) => setSearchValue(e.target.value)} placeholder='Search any city' className='bg-transparent w-[9rem] border-b text-sm pb-1.5 text-white outline-none' />
+                    <input type="text" ref={ref} value={searchValue} onKeyDown={handleKeyDown} onChange={(e) => setSearchValue(e.target.value)} placeholder='Search any city' className='bg-transparent w-[9rem] border-b text-sm pb-1.5 text-white outline-none' />
                     <button onClick={() => handleSearch()} className='bg-slate-600 bg-opacity-70 rounded-full p-1'><Search size={20} color="#ffffff" /></button>
                 </div>
 
